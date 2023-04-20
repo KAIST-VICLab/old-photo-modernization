@@ -1,8 +1,392 @@
+<!DOCTYPE html>
 <html>
-    <head>
 
-    </head>
-    <body>
-        Everything is TBU
-    </body>
+<head>
+    <meta charset="utf-8">
+    <meta name="description"
+        content="Modernizing Old Photos Using Multiple References via Photorealistic Style Transfer">
+    <meta name="keywords"
+        content="Old photo restoration, Old photo modernization, photorealistic style transfer, reference-based method">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Modernizing Old Photos Using Multiple References via Photorealistic Style Transfer</title>
+
+
+    <!-- Google Tag Manager -->
+    <script>(function (w, d, s, l, i) {
+            w[l] = w[l] || []; w[l].push({
+                'gtm.start':
+                    new Date().getTime(), event: 'gtm.js'
+            }); var f = d.getElementsByTagName(s)[0],
+                j = d.createElement(s), dl = l != 'dataLayer' ? '&l=' + l : ''; j.async = true; j.src =
+                    'https://www.googletagmanager.com/gtm.js?id=' + i + dl; f.parentNode.insertBefore(j, f);
+        })(window, document, 'script', 'dataLayer', 'GTM-TLGNVVJ');</script>
+    <!-- End Google Tag Manager -->
+
+    <link href="https://fonts.googleapis.com/css?family=Google+Sans|Noto+Sans|Castoro" rel="stylesheet">
+    <link rel="stylesheet" href="./static/css/bulma.min.css">
+    <link rel="stylesheet" href="./static/css/bulma-carousel.min.css">
+    <link rel="stylesheet" href="./static/css/bulma-slider.min.css">
+    <link rel="stylesheet" href="./static/css/fontawesome.all.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/jpswalsh/academicons@1/css/academicons.min.css">
+    <link rel="stylesheet" href="./static/css/index.css">
+    <link rel="icon" href="./static/images/favicon.svg">
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script defer src="./static/js/fontawesome.all.min.js"></script>
+    <script src="./static/js/bulma-carousel.min.js"></script>
+    <script src="./static/js/bulma-slider.min.js"></script>
+    <script src="./static/js/index.js"></script>
+</head>
+
+<body>
+
+    <nav class="navbar" role="navigation" aria-label="main navigation">
+        <div class="navbar-brand">
+            <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false">
+                <span aria-hidden="true"></span>
+                <span aria-hidden="true"></span>
+                <span aria-hidden="true"></span>
+            </a>
+        </div>
+        <div class="navbar-menu">
+            <div class="navbar-start" style="flex-grow: 1; justify-content: center;">
+                <a class="navbar-item" href="https://agusgun.github.io/">
+                    <span class="icon">
+                        <i class="fas fa-home"></i>
+                    </span>
+                </a>
+
+                <!-- <div class="navbar-item has-dropdown is-hoverable">
+                    <a class="navbar-link">
+                        More Research
+                    </a>
+                    <div class="navbar-dropdown">
+                        
+                    </div>
+                </div> -->
+            </div>
+
+        </div>
+    </nav>
+
+
+    <section class="hero">
+        <div class="hero-body">
+            <div class="container is-max-desktop">
+                <div class="columns is-centered">
+                    <div class="column has-text-centered">
+                        <h1 class="title is-1 publication-title">Modernizing Old Photos Using Multiple References via Photorealistic Style Transfer</h1>
+                        <h1 class="title is-3 conference">Accepted to CVPR 2023</h1>
+                        <div class="is-size-5 publication-authors">
+                            <span class="author-block">
+                                <a href="https://agusgun.github.io">Agus Gunawan</a><sup>1</sup>,</span>
+                            <span class="author-block">
+                                <a href="https://sites.google.com/view/sooyekim">Soo Ye Kim</a><sup>1,2</sup>,</span>
+                            <span class="author-block">
+                                <a href="https://sites.google.com/view/hjsim">Hyeonjun Sim</a><sup>1</sup>,
+                            </span>
+                            <span class="author-block">
+                                <a href="https://scholar.google.com/citations?user=FW4BUN0AAAAJ&hl=ko">Jae-Ho Lee</a><sup>3</sup>,
+                            </span>
+                            <span class="author-block">
+                                <a href="https://www.viclab.kaist.ac.kr/">Munchurl Kim</a><sup>1</sup>,
+                            </span>
+                        </div>
+
+                        <div class="is-size-5 publication-authors">
+                            <span class="author-block"><sup>1</sup>KAIST</span>
+                            <span class="author-block"><sup>2</sup>Adobe Research</span>
+                            <span class="author-block"><sup>3</sup>ETRI</span>
+                        </div>
+
+                        <div class="column has-text-centered">
+                            <div class="publication-links">
+                                <!-- PDF Link. -->
+                                <span class="link-block">
+                                    <!-- TODO UPDATE -->
+                                    <a href="https://kaist-viclab.github.io/old-photo-modernization/"
+                                        class="external-link button is-normal is-rounded is-dark">
+                                        <span class="icon">
+                                            <i class="fas fa-file-pdf"></i>
+                                        </span>
+                                        <span>Paper</span>
+                                    </a>
+                                </span>
+                                <span class="link-block">
+                                    <a href="https://arxiv.org/abs/2304.04461"
+                                        class="external-link button is-normal is-rounded is-dark">
+                                        <span class="icon">
+                                            <i class="ai ai-arxiv"></i>
+                                        </span>
+                                        <span>arXiv</span>
+                                    </a>
+                                </span>
+                                <!-- TODO UPDATE -->
+                                <!-- Video Link. -->
+                                <span class="link-block">
+                                    <a href="https://kaist-viclab.github.io/old-photo-modernization/"
+                                        class="external-link button is-normal is-rounded is-dark">
+                                        <span class="icon">
+                                            <i class="fab fa-youtube"></i>
+                                        </span>
+                                        <span>Video</span>
+                                    </a>
+                                </span>
+                                <!-- Code Link. -->
+                                <span class="link-block">
+                                    <a href="https://github.com/KAIST-VICLab/old-photo-modernization"
+                                        class="external-link button is-normal is-rounded is-dark">
+                                        <span class="icon">
+                                            <i class="fab fa-github"></i>
+                                        </span>
+                                        <span>Code</span>
+                                    </a>
+                                </span>
+                                <!-- Dataset Link. -->
+                                <span class="link-block">
+                                    <a href="https://www.dropbox.com/sh/swy9eas9eud2o82/AABSVIxuZ6FT5lc-Zrtj81Mya?dl=0"
+                                        class="external-link button is-normal is-rounded is-dark">
+                                        <span class="icon">
+                                            <i class="far fa-images"></i>
+                                        </span>
+                                        <span>Data</span>
+                                    </a>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="hero teaser">
+        <div class="container is-max-desktop">
+            <div class="hero-body">
+                <!-- TODO Teaser Image -->
+                <img src="./static/content/teaser.png" id="teaser"
+                alt="Teaser of the result of our method." />
+                <h2 class="subtitle has-text-centered">
+                    Our method (<span class="mropm">MROPM</span>) is able to generate more modern-looking images that resemble the style of reference images without the use of old photos during training.
+                </h2>
+            </div>
+        </div>
+    </section>
+
+    <section class="hero is-light is-small">
+        <div class="hero-body">
+            <div class="container">
+                <div id="results-carousel" class="carousel results-carousel">
+
+                    <div class="item">
+                        <table>
+                            <tr>
+                                <td>
+                                    <span>Old Photo</span>
+                                    <img src="./static/content/resultA/old.png" alt="oldA" />
+                                </td>
+                                <td>
+                                    <span>Output</span>
+                                    <img src="./static/content/resultA/out.png" alt="outA" />
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <span>Reference 1</span>
+                                    <img src="./static/content/resultA/ref1.png" alt="refA_1" />
+                                </td>
+                                <td>
+                                    <span>Reference 2</span>
+                                    <img src="./static/content/resultA/ref2.png" alt="refA_2" />
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                    <div class="item">
+                        <table>
+                            <tr>
+                                <td>
+                                    <span>Old Photo</span>
+                                    <img src="./static/content/resultB/old.png" alt="oldB" />
+                                </td>
+                                <td>
+                                    <span>Output</span>
+                                    <img src="./static/content/resultB/out.png" alt="outB" />
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <span>Reference 1</span>
+                                    <img src="./static/content/resultB/ref1.png" alt="refB_1" />
+                                </td>
+                                <td>
+                                    <span>Reference 2</span>
+                                    <img src="./static/content/resultB/ref2.png" alt="refB_2" />
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                    <div class="item">
+                        <table>
+                            <tr>
+                                <td>
+                                    <span>Old Photo</span>
+                                    <img src="./static/content/resultC/old.png" alt="oldC" />
+                                </td>
+                                <td>
+                                    <span>Output</span>
+                                    <img src="./static/content/resultC/out.png" alt="outC" />
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <span>Reference 1</span>
+                                    <img src="./static/content/resultC/ref1.png" alt="refC_1" />
+                                </td>
+                                <td>
+                                    <span>Reference 2</span>
+                                    <img src="./static/content/resultC/ref2.png" alt="refC_2" />
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                    <div class="item">
+                        <table>
+                            <tr>
+                                <td>
+                                    <span>Old Photo</span>
+                                    <img src="./static/content/resultD/old.png" alt="oldD" />
+                                </td>
+                                <td>
+                                    <span>Output</span>
+                                    <img src="./static/content/resultD/out.png" alt="outD" />
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <span>Reference 1</span>
+                                    <img src="./static/content/resultD/ref1.png" alt="refD_1" />
+                                </td>
+                                <td>
+                                    <span>Reference 2</span>
+                                    <img src="./static/content/resultD/ref2.png" alt="refD_2" />
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+    <section class="section">
+        <div class="container is-max-desktop">
+            <!-- Abstract. -->
+            <div class="columns is-centered has-text-centered">
+                <div class="column is-four-fifths">
+                    <h2 class="title is-3">Abstract</h2>
+                    <div class="content has-text-justified">
+                        <p>
+                            This paper firstly presents old photo modernization using multiple references 
+                            by performing stylization and enhancement in a unified manner. 
+                        </p>
+                        <p>
+                            In order to modernize old photos, we propose a novel multi-reference-based 
+                            old photo modernization (MROPM) framework consisting of a network MROPM-Net 
+                            and a novel synthetic data generation scheme. 
+                            MROPM-Net stylizes old photos using multiple references via photorealistic style transfer (PST) 
+                            and further enhances the results to produce modern-looking images. 
+                            Meanwhile, the synthetic data generation scheme trains the network to effectively utilize 
+                            multiple references to perform modernization. 
+                        </p>
+                        <p>
+                            To evaluate the performance, we propose a new old photos benchmark dataset (CHD) consisting of 
+                            diverse natural indoor and outdoor scenes. 
+                            Extensive experiments show that the proposed method outperforms other baselines in 
+                            performing modernization on real old photos, even though no old photos were used 
+                            during training. Moreover, our method can appropriately select styles from multiple references 
+                            for each semantic region in the old photo to further improve the modernization performance.
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <!--/ Abstract. -->
+
+            <!-- Paper video. -->
+            <div class="columns is-centered has-text-centered">
+                <div class="column is-four-fifths">
+                    <h2 class="title is-3">Video</h2>
+                    <div class="publication-video">
+                        <span>Coming soon!</span>
+                        <!-- TODO VIDEO -->
+                    </div>
+                </div>
+            </div>
+            <!--/ Paper video. -->
+        </div>
+    </section>
+
+
+    <section class="section">
+        <div class="container is-max-desktop">
+            <!-- Related Work. -->
+            <div class="columns is-centered">
+                <div class="column is-full-width">
+                    <h2 class="title is-3">Related Work</h2>
+
+                    <div class="content has-text-justified">
+                        <p>
+                            [1] Wan, Ziyu, et al. "Bringing old photos back to life." proceedings of the IEEE/CVF conference on computer vision and pattern recognition. 2020.
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <!--/ Related Work. -->
+
+        </div>
+    </section>
+
+
+    <section class="section" id="BibTeX">
+        <div class="container is-max-desktop content">
+            <h2 class="title">BibTeX</h2>
+            <pre><code>@article{gunawan2023modernizing,
+  author    = {Gunawan, Agus and Kim, Soo Ye and Sim, Hyeonjun and Lee, Jae-Ho and Kim, Munchurl},
+  title     = {Modernizing Old Photos Using Multiple References via Photorealistic Style Transfer},
+  journal   = {arXiv preprint arXiv:2304.04461},
+  year      = {2023},
+}</code></pre>
+        </div>
+    </section>
+
+
+    <footer class="footer">
+        <div class="container">
+            <div class="content has-text-centered">
+                <a class="icon-link" href="https://arxiv.org/pdf/2304.04461.pdf">
+                    <i class="fas fa-file-pdf"></i>
+                </a>
+                <a class="icon-link" href="https://github.com/KAIST-VICLab/old-photo-modernization" class="external-link" disabled>
+                    <i class="fab fa-github"></i>
+                </a>
+            </div>
+            <div class="columns is-centered">
+                <div class="column is-8">
+                    <div class="content">
+                        <p>
+                            This website is licensed under a <a rel="license"
+                                href="http://creativecommons.org/licenses/by-sa/4.0/">Creative
+                                Commons Attribution-ShareAlike 4.0 International License</a>.
+                            We use <a
+                            href="https://github.com/nerfies/nerfies.github.io">Nerfies</a> source code to create this website.
+                            We thank Nerfies's authors to share the template for us.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+</body>
+
 </html>
