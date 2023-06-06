@@ -75,6 +75,27 @@ $(document).ready(function() {
 
     bulmaSlider.attach();
 
+    // Demo logic
+    var filenameSelector = document.getElementById("filename");
+
+    filenameSelector.addEventListener("change", function() {
+      let input_path = "./static/demo/input/" + filenameSelector.value + ".png";
+      let opr_path = "./static/demo/opr/" + filenameSelector.value + ".png";
+      let excoltran_path = "./static/demo/excoltran+opr/content_" + filenameSelector.value + "_fake_R_rgb_3.png";
+      let rehistogan_path = "./static/demo/rehistogan+opr/output_" + filenameSelector.value + "_generated.png";
+      let mast_path = "./static/demo/mast+opr/" + filenameSelector.value + "_" + filenameSelector.value + ".png";
+      let pcapst_path = "./static/demo/pcapst+opr/" + filenameSelector.value + ".png";
+      let ours_path = "./static/demo/ours/" + filenameSelector.value + ".png";
+
+      document.getElementById("demo_input").src = input_path;
+      document.getElementById("demo_opr").src = opr_path;
+      document.getElementById("demo_excoltran").src = excoltran_path;
+      document.getElementById("demo_rehistogan").src = rehistogan_path;
+      document.getElementById("demo_mast").src = mast_path;
+      document.getElementById("demo_pcapst").src = pcapst_path;
+      document.getElementById("demo_ours").src = ours_path;
+    });
+    
 })
 
 

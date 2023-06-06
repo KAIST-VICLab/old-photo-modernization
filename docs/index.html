@@ -76,7 +76,7 @@
                 <div class="columns is-centered">
                     <div class="column has-text-centered">
                         <h1 class="title is-1 publication-title">Modernizing Old Photos Using Multiple References via Photorealistic Style Transfer</h1>
-                        <h1 class="title is-3 conference">Accepted to CVPR 2023</h1>
+                        <h1 class="title is-3 conference">CVPR 2023</h1>
                         <div class="is-size-5 publication-authors">
                             <span class="author-block">
                                 <a href="https://agusgun.github.io">Agus Gunawan</a><sup>1</sup>,</span>
@@ -103,8 +103,7 @@
                             <div class="publication-links">
                                 <!-- PDF Link. -->
                                 <span class="link-block">
-                                    <!-- TODO UPDATE -->
-                                    <a href="https://kaist-viclab.github.io/old-photo-modernization/"
+                                    <a href="https://openaccess.thecvf.com/content/CVPR2023/papers/Gunawan_Modernizing_Old_Photos_Using_Multiple_References_via_Photorealistic_Style_Transfer_CVPR_2023_paper.pdf"
                                         class="external-link button is-normal is-rounded is-dark">
                                         <span class="icon">
                                             <i class="fas fa-file-pdf"></i>
@@ -121,10 +120,9 @@
                                         <span>arXiv</span>
                                     </a>
                                 </span>
-                                <!-- TODO UPDATE -->
                                 <!-- Video Link. -->
                                 <span class="link-block">
-                                    <a href="https://kaist-viclab.github.io/old-photo-modernization/"
+                                    <a href="https://youtu.be/XMmk_PQtE9Y"
                                         class="external-link button is-normal is-rounded is-dark">
                                         <span class="icon">
                                             <i class="fab fa-youtube"></i>
@@ -152,7 +150,6 @@
                                         <span>Data</span>
                                     </a>
                             </div>
-
                         </div>
                     </div>
                 </div>
@@ -163,7 +160,6 @@
     <section class="hero teaser">
         <div class="container is-max-desktop">
             <div class="hero-body">
-                <!-- TODO Teaser Image -->
                 <img src="./static/content/teaser.png" id="teaser"
                 alt="Teaser of the result of our method." />
                 <h2 class="subtitle has-text-centered">
@@ -318,8 +314,8 @@
                 <div class="column is-four-fifths">
                     <h2 class="title is-3">Video</h2>
                     <div class="publication-video">
-                        <span>Coming soon!</span>
-                        <!-- TODO VIDEO -->
+                        <iframe src="https://www.youtube.com/embed/XMmk_PQtE9Y?rel=0&amp;showinfo=0"
+                                frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
                     </div>
                 </div>
             </div>
@@ -327,6 +323,388 @@
         </div>
     </section>
 
+    <!-- Key Ideas. -->
+    <div class="columns is-centered has-text-centered">
+        <div class="column is-four-fifths">
+            <h2 class="title is-3">Key Ideas</h2>
+            <div class="content has-text-justified">
+                Our framework named as Multi-Reference-based Old Photo Modernization (MROPM) consists of two key ideas:
+                <ul>
+                    <li><strong>MROPM-Net</strong> to modernize old color photos by changing their styles and enhancing them to look modern</li>
+                    <li><strong>Synthetic data generation scheme</strong> to train the network in a self-supervised manner</li>
+                </ul>
+                <h3 class="title is-5 has-text-centered">MROPMNet</h3>
+                <div class="columns">
+                    <div class="column">
+                        <figure class="image">
+                            <img src="./static/images/key_ideas/mropm_mropmnet.png" style="width: 80%;">
+                        </figure>
+                    </div>
+                    <div class="column is-one-third">
+                        <p>
+                            Our network consists of two different subnetworks to modernize old photos.
+                            1) A <strong>shared single stylization subnet</strong> to stylize old photo (content) given a single reference (style).
+                            2) A <strong>merging-refinement subnet</strong> to merge multiple stylization results depending on the semantic similarity and further refine the results.
+                            Note: All examples in the figure use two references. However, our framework can use more than two references.
+                        </p>
+                    </div>
+                </div>
+                <div class="columns">
+                    <div class="column">
+                        <h4 class="title is-6 has-text-centered">Single Stylization Subnet</h4>
+                        <figure class="image">
+                            <img src="./static/images/key_ideas/mropmnet_single.png">
+                        </figure>
+                        <p class="has-text-justified">
+                            In photorealistic style transfer, one can transfer the style of a photo (reference) to another photo (old photo) using AdaIN.
+                            AdaIN computes the style code (channel-wise mean and standard deviation) and uses it to align the mean and std of the target image.
+                            Instead of computing style code, our core idea is to predict it.
+                            First, we compute local & global style codes using local filter and global pooling respectively.
+                            Then, we align the local style code using non-local attention between deep features of the old photo and reference.
+                            Finally, we fuse both aligned local and global style codes and use the fused style code to align the mean and std of the content image (old photo in this image) via AdaIN.
+                        </p>
+                    </div>
+                    <div class="column">
+                        <h4 class="title is-6 has-text-centered">Merging-Refinement Subnet</h4>
+                        <figure class="image">
+                            <img src="./static/images/key_ideas/mropmnet_merging.png">
+                        </figure>
+                        <p class="has-text-justified">
+                            <br>
+                            The idea of merging-refinement subnet is to select the most appropriate styles from multiple stylized features for each semantic region in the old photo.
+                            To achieve this, we employ spatial attention to spatially strengthen and dampen semantically related and unrelated stylized features respectively depending on the correlation matrices.
+                            Furthermore, we refine the merging results using U-Net to produce the final modernization result.
+                        </p>
+                    </div>
+                </div>
+                <h3 class="title is-5 has-text-centered">Synthetic Data Generation Scheme</h3>
+                <figure class="image">
+                    <img src="./static/images/key_ideas/mropm_synthetic_data.png" style="width: 80%;">
+                </figure>
+                <p class="has-text-justified">                            
+                    The next key idea of our method is a synthetic data generation scheme.
+                    Since there is no ground truth in the old photo modernization task, we propose a data generation scheme to train the network in a self-supervised manner.
+                    The core idea is to use transformation with style-invariant (SIT) and variant (SVT) properties, determined by whether the transformation affects the mean and std of any semantic regions.
+                    We employ rigid transformation (translation for the region that can be translated, rotation, and flipping) for SIT.
+                    While, random color jittering and unstructured degradation, i.e., blur, noise, resizing, and compression artifacts are used for Style Variant Transformation (SVT).
+                    Given a dataset that has a dense semantic segmentation mask, we split the mask into two (N) different unique sets.
+                    Then, we use these binary masks to obtain masked photos.
+                    To obtain the input image (c), we sum the results of different SVT from both masked photos.
+                    Meanwhile, to obtain the style images (s1 & s2), we use different SIT and fill the unmasked region with random images from the same dataset (URF).
+                </p>
+            </div>
+        </div>
+    </div>
+    <!--/ Key Ideas. -->
+
+    <!-- Demos. -->
+    <section class="section">
+        <div class="container is-max-desktop">
+            <div class="columns is-centered has-text-centered">
+                <div class="column is-four-fifths">
+                    <h2 class="title is-3">Demos</h2>
+                    <div class="columns is-centered">
+                        <div class="column">
+                            <p class="has-text-justified mb-4">
+                                Select an image from the dropdown below. All of the images are from our dataset.
+                                <strong>Important note:</strong> references are not shown to prevent copyright issues.
+                                For details related to the reference, please see our GitHub code.
+                            </p>
+                            <div class="select is-multiple is-info is-normal">
+                                <select name="filename" multiple size="3" id="filename">
+                                    <option value="GIMHAE_COLOR_0001" selected>GIMHAE_COLOR_0001</option>
+                                    <option value="GIMHAE_COLOR_0002">GIMHAE_COLOR_0002</option>
+                                    <option value="GIMHAE_COLOR_0003">GIMHAE_COLOR_0003</option>
+                                    <option value="GIMHAE_COLOR_0004">GIMHAE_COLOR_0004</option>
+                                    <option value="GIMHAE_COLOR_0005">GIMHAE_COLOR_0005</option>
+                                    <option value="GIMHAE_COLOR_0006">GIMHAE_COLOR_0006</option>
+                                    <option value="GIMHAE_COLOR_0007">GIMHAE_COLOR_0007</option>
+                                    <option value="GIMHAE_COLOR_0008">GIMHAE_COLOR_0008</option>
+                                    <option value="GIMHAE_COLOR_0009">GIMHAE_COLOR_0009</option>
+                                    <option value="GIMHAE_COLOR_0010">GIMHAE_COLOR_0010</option>
+                                    <option value="GIMHAE_COLOR_0011">GIMHAE_COLOR_0011</option>
+                                    <option value="GIMHAE_COLOR_0012">GIMHAE_COLOR_0012</option>
+                                    <option value="GIMHAE_COLOR_0013">GIMHAE_COLOR_0013</option>
+                                    <option value="GIMHAE_COLOR_0014">GIMHAE_COLOR_0014</option>
+                                    <option value="GIMHAE_COLOR_0015">GIMHAE_COLOR_0015</option>
+                                    <option value="GIMHAE_COLOR_0016">GIMHAE_COLOR_0016</option>
+                                    <option value="GIMHAE_COLOR_0017">GIMHAE_COLOR_0017</option>
+                                    <option value="GIMHAE_COLOR_0018">GIMHAE_COLOR_0018</option>
+                                    <option value="GIMHAE_COLOR_0019">GIMHAE_COLOR_0019</option>
+                                    <option value="GIMHAE_COLOR_0020">GIMHAE_COLOR_0020</option>
+                                    <option value="GIMHAE_COLOR_0021">GIMHAE_COLOR_0021</option>
+                                    <option value="GIMHAE_COLOR_0022">GIMHAE_COLOR_0022</option>
+                                    <option value="GIMHAE_COLOR_0023">GIMHAE_COLOR_0023</option>
+                                    <option value="GIMHAE_COLOR_0024">GIMHAE_COLOR_0024</option>
+                                    <option value="GIMHAE_COLOR_0025">GIMHAE_COLOR_0025</option>
+                                    <option value="GIMHAE_COLOR_0026">GIMHAE_COLOR_0026</option>
+                                    <option value="GIMHAE_COLOR_0027">GIMHAE_COLOR_0027</option>
+                                    <option value="GIMHAE_COLOR_0028">GIMHAE_COLOR_0028</option>
+                                    <option value="JEJU_COLOR_0097">JEJU_COLOR_0097</option>
+                                    <option value="JEJU_COLOR_0098">JEJU_COLOR_0098</option>
+                                    <option value="JEJU_COLOR_0099">JEJU_COLOR_0099</option>
+                                    <option value="JEJU_COLOR_0100">JEJU_COLOR_0100</option>
+                                    <option value="JEJU_COLOR_0101">JEJU_COLOR_0101</option>
+                                    <option value="JEJU_COLOR_0102">JEJU_COLOR_0102</option>
+                                    <option value="JEJU_COLOR_0103">JEJU_COLOR_0103</option>
+                                    <option value="JEJU_COLOR_0104">JEJU_COLOR_0104</option>
+                                    <option value="JEJU_COLOR_0105">JEJU_COLOR_0105</option>
+                                    <option value="JEJU_COLOR_0106">JEJU_COLOR_0106</option>
+                                    <option value="JEJU_COLOR_0107">JEJU_COLOR_0107</option>
+                                    <option value="JEJU_COLOR_0108">JEJU_COLOR_0108</option>
+                                    <option value="JEJU_COLOR_0109">JEJU_COLOR_0109</option>
+                                    <option value="JEJU_COLOR_0110">JEJU_COLOR_0110</option>
+                                    <option value="JEJU_COLOR_0111">JEJU_COLOR_0111</option>
+                                    <option value="JEJU_COLOR_0112">JEJU_COLOR_0112</option>
+                                    <option value="JEJU_COLOR_0113">JEJU_COLOR_0113</option>
+                                    <option value="JEJU_COLOR_0114">JEJU_COLOR_0114</option>
+                                    <option value="JEJU_COLOR_0115">JEJU_COLOR_0115</option>
+                                    <option value="JEJU_COLOR_0116">JEJU_COLOR_0116</option>
+                                    <option value="NMOK_COLOR_0001">NMOK_COLOR_0001</option>
+                                    <option value="NMOK_COLOR_0002">NMOK_COLOR_0002</option>
+                                    <option value="NMOK_COLOR_0003">NMOK_COLOR_0003</option>
+                                    <option value="NMOK_COLOR_0004">NMOK_COLOR_0004</option>
+                                    <option value="NMOK_COLOR_0005">NMOK_COLOR_0005</option>
+                                    <option value="NMOK_COLOR_0006">NMOK_COLOR_0006</option>
+                                    <option value="NMOK_COLOR_0007">NMOK_COLOR_0007</option>
+                                    <option value="NMOK_COLOR_0008">NMOK_COLOR_0008</option>
+                                    <option value="NMOK_COLOR_0009">NMOK_COLOR_0009</option>
+                                    <option value="NMOK_COLOR_0010">NMOK_COLOR_0010</option>
+                                    <option value="NMOK_COLOR_0011">NMOK_COLOR_0011</option>
+                                    <option value="NMOK_COLOR_0012">NMOK_COLOR_0012</option>
+                                    <option value="NMOK_COLOR_0013">NMOK_COLOR_0013</option>
+                                    <option value="NMOK_COLOR_0014">NMOK_COLOR_0014</option>
+                                    <option value="NMOK_COLOR_0015">NMOK_COLOR_0015</option>
+                                    <option value="NMOK_COLOR_0016">NMOK_COLOR_0016</option>
+                                    <option value="NMOK_COLOR_0017">NMOK_COLOR_0017</option>
+                                    <option value="NMOK_COLOR_0018">NMOK_COLOR_0018</option>
+                                    <option value="NMOK_COLOR_0019">NMOK_COLOR_0019</option>
+                                    <option value="NMOK_COLOR_0020">NMOK_COLOR_0020</option>
+                                    <option value="NMOK_COLOR_0021">NMOK_COLOR_0021</option>
+                                    <option value="NMOK_COLOR_0022">NMOK_COLOR_0022</option>
+                                    <option value="NMOK_COLOR_0023">NMOK_COLOR_0023</option>
+                                    <option value="NMOK_COLOR_0024">NMOK_COLOR_0024</option>
+                                    <option value="NMOK_COLOR_0025">NMOK_COLOR_0025</option>
+                                    <option value="NMOK_COLOR_0026">NMOK_COLOR_0026</option>
+                                    <option value="NMOK_COLOR_0027">NMOK_COLOR_0027</option>
+                                    <option value="NMOK_COLOR_0028">NMOK_COLOR_0028</option>
+                                    <option value="NMOK_COLOR_0029">NMOK_COLOR_0029</option>
+                                    <option value="NMOK_COLOR_0030">NMOK_COLOR_0030</option>
+                                    <option value="NMOK_COLOR_0031">NMOK_COLOR_0031</option>
+                                    <option value="NMOK_COLOR_0032">NMOK_COLOR_0032</option>
+                                    <option value="NMOK_COLOR_0033">NMOK_COLOR_0033</option>
+                                    <option value="NMOK_COLOR_0034">NMOK_COLOR_0034</option>
+                                    <option value="NMOK_COLOR_0035">NMOK_COLOR_0035</option>
+                                    <option value="NMOK_COLOR_0036">NMOK_COLOR_0036</option>
+                                    <option value="NMOK_COLOR_0037">NMOK_COLOR_0037</option>
+                                    <option value="NMOK_COLOR_0038">NMOK_COLOR_0038</option>
+                                    <option value="NMOK_COLOR_0039">NMOK_COLOR_0039</option>
+                                    <option value="NMOK_COLOR_0040">NMOK_COLOR_0040</option>
+                                    <option value="NMOK_COLOR_0041">NMOK_COLOR_0041</option>
+                                    <option value="NMOK_COLOR_0042">NMOK_COLOR_0042</option>
+                                    <option value="NMOK_COLOR_0043">NMOK_COLOR_0043</option>
+                                    <option value="NMOK_COLOR_0044">NMOK_COLOR_0044</option>
+                                    <option value="NMOK_COLOR_0045">NMOK_COLOR_0045</option>
+                                    <option value="NMOK_COLOR_0046">NMOK_COLOR_0046</option>
+                                    <option value="NMOK_COLOR_0047">NMOK_COLOR_0047</option>
+                                    <option value="NMOK_COLOR_0048">NMOK_COLOR_0048</option>
+                                    <option value="NMOK_COLOR_0049">NMOK_COLOR_0049</option>
+                                    <option value="NMOK_COLOR_0050">NMOK_COLOR_0050</option>
+                                    <option value="NMOK_COLOR_0051">NMOK_COLOR_0051</option>
+                                    <option value="NMOK_COLOR_0052">NMOK_COLOR_0052</option>
+                                    <option value="NMOK_COLOR_0053">NMOK_COLOR_0053</option>
+                                    <option value="NMOK_COLOR_0054">NMOK_COLOR_0054</option>
+                                    <option value="NMOK_COLOR_0055">NMOK_COLOR_0055</option>
+                                    <option value="NMOK_COLOR_0056">NMOK_COLOR_0056</option>
+                                    <option value="NMOK_COLOR_0057">NMOK_COLOR_0057</option>
+                                    <option value="NMOK_COLOR_0058">NMOK_COLOR_0058</option>
+                                    <option value="NMOK_COLOR_0059">NMOK_COLOR_0059</option>
+                                    <option value="NMOK_COLOR_0060">NMOK_COLOR_0060</option>
+                                    <option value="NMOK_COLOR_0061">NMOK_COLOR_0061</option>
+                                    <option value="NMOK_COLOR_0062">NMOK_COLOR_0062</option>
+                                    <option value="NMOK_COLOR_0063">NMOK_COLOR_0063</option>
+                                    <option value="NMOK_COLOR_0064">NMOK_COLOR_0064</option>
+                                    <option value="NMOK_COLOR_0065">NMOK_COLOR_0065</option>
+                                    <option value="NMOK_COLOR_0066">NMOK_COLOR_0066</option>
+                                    <option value="NMOK_COLOR_0067">NMOK_COLOR_0067</option>
+                                    <option value="NMOK_COLOR_0068">NMOK_COLOR_0068</option>
+                                    <option value="NMOK_COLOR_0069">NMOK_COLOR_0069</option>
+                                    <option value="NMOK_COLOR_0070">NMOK_COLOR_0070</option>
+                                    <option value="NMOK_COLOR_0071">NMOK_COLOR_0071</option>
+                                    <option value="NMOK_COLOR_0072">NMOK_COLOR_0072</option>
+                                    <option value="NMOK_COLOR_0073">NMOK_COLOR_0073</option>
+                                    <option value="NMOK_COLOR_0074">NMOK_COLOR_0074</option>
+                                    <option value="NMOK_COLOR_0075">NMOK_COLOR_0075</option>
+                                    <option value="NMOK_COLOR_0076">NMOK_COLOR_0076</option>
+                                    <option value="NMOK_COLOR_0077">NMOK_COLOR_0077</option>
+                                    <option value="NMOK_COLOR_0078">NMOK_COLOR_0078</option>
+                                    <option value="NMOK_COLOR_0079">NMOK_COLOR_0079</option>
+                                    <option value="NMOK_COLOR_0080">NMOK_COLOR_0080</option>
+                                    <option value="NMOK_COLOR_0081">NMOK_COLOR_0081</option>
+                                    <option value="NMOK_COLOR_0082">NMOK_COLOR_0082</option>
+                                </select>
+                            </div>
+                            <table class="table is-full-width is-borderless">
+                                <thead>
+                                    <tr>
+                                        <th colspan="3" class="has-text-centered">Input</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td colspan="3"><img src="./static/demo/input/GIMHAE_COLOR_0001.png" style="width: 40%;" id="demo_input"/> </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <table class="table is-full-width is-borderless">
+                                <thead>
+                                    <tr>
+                                        <th class="has-text-centered">OPR [1]</th>
+                                        <th class="has-text-centered">ExColTran [2] + OPR [1]</th>
+                                        <th class="has-text-centered">ReHistoGAN [3] + OPR [1]</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td><img src="./static/demo/opr/GIMHAE_COLOR_0001.png" id="demo_opr"/></td>
+                                        <td><img src="./static/demo/excoltran+opr/content_GIMHAE_COLOR_0001_fake_R_rgb_3.png" id="demo_excoltran"/></td>
+                                        <td><img src="./static/demo/rehistogan+opr/output_GIMHAE_COLOR_0001_generated.png" id="demo_rehistogan"/></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <table class="table is-full-width is-borderless">
+                                <thead>
+                                    <tr>
+                                        <th class="has-text-centered">MAST [4] + OPR [1]</th>
+                                        <th class="has-text-centered">PCAPST [5] + OPR [1]</th>
+                                        <th class="has-text-centered">Ours</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>
+                                            <figure class="image">
+                                                <img src="./static/demo/mast+opr/GIMHAE_COLOR_0001_GIMHAE_COLOR_0001.png" id="demo_mast">
+                                            </figure>
+                                        </td>
+                                        <td>
+                                            <figure class="image">
+                                                <img src="./static/demo/pcapst+opr/GIMHAE_COLOR_0001.png" id="demo_pcapst">
+                                            </figure>
+                                        </td>
+                                        <td>
+                                            <figure class="image">
+                                                <img src="./static/demo/ours/GIMHAE_COLOR_0001.png" id="demo_ours">
+                                            </figure>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        
+                        <!-- <p>
+                            Add every results
+                        </p>
+                        <p>
+                            Disclaimer: Due to copyright issues, we cannot show the reference images in our site.
+                            Please refer to dataset in github code for further details.
+                        </p> -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!--/ Demos. -->
+
+    <!-- Additional Results. -->
+    <section class="section">
+        <div class="container is-max-desktop">
+            <div class="columns is-centered has-text-centered">
+                <div class="column is-four-fifths">
+                    <h2 class="title is-3">Additional Results</h2>
+                    <div class="content has-text-justified">
+                        <h3 class="title is-5">Application: Semantic Photorealistic Style Transfer</h3>
+                        <p>
+                            Our method can be used for semantic photorealistic style transfer.
+                        </p>
+                        <table class="table is-full-width is-borderless">
+                            <thead>
+                                <tr>
+                                    <th class="has-text-centered spst">Content</th>
+                                    <th class="has-text-centered spst">Style</th>
+                                    <th class="has-text-centered spst">MAST [4]</th>
+                                    <th class="has-text-centered spst">PCAPST [5]</th>
+                                    <th class="has-text-centered spst">Ours</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td class="spst"><img src="./static/images/semantic_style_transfer/content1.png"></td>
+                                    <td class="spst"><img src="./static/images/semantic_style_transfer/style1.png"></td>
+                                    <td class="spst"><img src="./static/images/semantic_style_transfer/mast1.png"></td>
+                                    <td class="spst"><img src="./static/images/semantic_style_transfer/pcapst1.png"></td>
+                                    <td class="spst"><img src="./static/images/semantic_style_transfer/ours1.png"></td>
+                                </tr>
+                                <tr>
+                                    <td class="spst"><img src="./static/images/semantic_style_transfer/content2.png"></td>
+                                    <td class="spst"><img src="./static/images/semantic_style_transfer/style2.png"></td>
+                                    <td class="spst"><img src="./static/images/semantic_style_transfer/mast2.png"></td>
+                                    <td class="spst"><img src="./static/images/semantic_style_transfer/pcapst2.jpeg"></td>
+                                    <td class="spst"><img src="./static/images/semantic_style_transfer/ours2.png"></td>
+                                </tr>
+                                <tr>
+                                    <td class="spst"><img src="./static/images/semantic_style_transfer/content3.png"></td>
+                                    <td class="spst"><img src="./static/images/semantic_style_transfer/style3.png"></td>
+                                    <td class="spst"><img src="./static/images/semantic_style_transfer/mast3.png"></td>
+                                    <td class="spst"><img src="./static/images/semantic_style_transfer/pcapst3.png"></td>
+                                    <td class="spst"><img src="./static/images/semantic_style_transfer/ours3.png"></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <h3 class="title is-5">Application: Real Old Photos in The Wild</h3>
+                        <p>
+                            Some modernization results from real old photos in the wild.
+                            <strong>Note:</strong> We do not own any old photos and references for this application.
+                            All of the images are obtained from the internet with CC licenses.
+                        </p>
+                        <table class="table is-full-width is-borderless">
+                            <thead>
+                                <tr>
+                                    <th class="has-text-centered real_old_photo">Old Photo</th>
+                                    <th class="has-text-centered real_old_photo">Reference 1</th>
+                                    <th class="has-text-centered real_old_photo">Reference 2</th>
+                                    <th class="has-text-centered real_old_photo">Ours</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td class="real_old_photo"><img src="./static/images/real_old_photos/old_photo1.png"></td>
+                                    <td class="real_old_photo"><img src="./static/images/real_old_photos/style1_1.png"></td>
+                                    <td class="real_old_photo"><img src="./static/images/real_old_photos/style2_1.png"></td>
+                                    <td class="real_old_photo"><img src="./static/images/real_old_photos/out1.png"></td>
+                                </tr>
+                                <tr>
+                                    <td class="real_old_photo"><img src="./static/images/real_old_photos/old_photo2.png"></td>
+                                    <td class="real_old_photo"><img src="./static/images/real_old_photos/style1_2.png"></td>
+                                    <td class="real_old_photo"><img src="./static/images/real_old_photos/style2_2.png"></td>
+                                    <td class="real_old_photo"><img src="./static/images/real_old_photos/out2.png"></td>
+                                </tr>
+                                <tr>
+                                    <td class="real_old_photo"><img src="./static/images/real_old_photos/old_photo3.png"></td>
+                                    <td class="real_old_photo"><img src="./static/images/real_old_photos/style1_3.png"></td>
+                                    <td class="real_old_photo"><img src="./static/images/real_old_photos/style2_3.png"></td>
+                                    <td class="real_old_photo"><img src="./static/images/real_old_photos/out3.png"></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!--/ Additional Results. -->
+
+    
 
     <section class="section">
         <div class="container is-max-desktop">
@@ -338,6 +716,14 @@
                     <div class="content has-text-justified">
                         <p>
                             [1] Wan, Ziyu, et al. "Bringing old photos back to life." proceedings of the IEEE/CVF conference on computer vision and pattern recognition. 2020.
+                            <br>
+                            [2] Yin, Wang, et al. "Yes," Attention Is All You Need", for Exemplar based Colorization." Proceedings of the 29th ACM International Conference on Multimedia. 2021.
+                            <br>
+                            [3] Afifi, Mahmoud, Marcus A. Brubaker, and Michael S. Brown. "Histogan: Controlling colors of gan-generated and real images via color histograms." Proceedings of the IEEE/CVF conference on computer vision and pattern recognition. 2021.
+                            <br>
+                            [4] Huo, Jing, et al. "Manifold alignment for semantically aligned style transfer." Proceedings of the IEEE/CVF International Conference on Computer Vision. 2021.
+                            <br>
+                            [5] Chiu, Tai-Yin, and Danna Gurari. "PCA-based knowledge distillation towards lightweight and content-style balanced photorealistic style transfer models." Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition. 2022.
                         </p>
                     </div>
                 </div>
@@ -354,7 +740,8 @@
             <pre><code>@article{gunawan2023modernizing,
   author    = {Gunawan, Agus and Kim, Soo Ye and Sim, Hyeonjun and Lee, Jae-Ho and Kim, Munchurl},
   title     = {Modernizing Old Photos Using Multiple References via Photorealistic Style Transfer},
-  journal   = {arXiv preprint arXiv:2304.04461},
+  booktitle = {Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition},
+  pages     = {12460--12469},
   year      = {2023},
 }</code></pre>
         </div>

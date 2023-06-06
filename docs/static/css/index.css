@@ -164,3 +164,24 @@ body {
 #interpolation-image-wrapper img {
   border-radius: 5px;
 }
+
+.image img {
+  width: auto;
+  height: auto;
+  max-width: 100%;
+  max-height: 100%;
+}
+
+td, th {
+  width: 33%;
+}
+.table.is-borderless td, .table.is-borderless th {
+  border: 0;
+}
+
+td.spst, th.spst {
+  width: 20%;
+}
+td.real_old_photo, th.real_old_photo {
+  width: 20%;
+}
