@@ -1,0 +1,217 @@
+# v2_4: Grayscale lowresolution
+experiment:
+  name: multi_reference_modernization
+  root_dir: resources/experiments/multi_reference_modernization_paper_retrain_stage2 # CHANGE HERE
+  add_timestamp: false
+
+engine:
+  file: local_engine
+  class: LocalMachineSingleGPU
+  phase: training # phase of the experiment: training | evaluation
+  gpu_id: 1
+  # use cudnn benchmark when input size is constant; if you want reproducibility, set as false
+  cudnn_deterministic: false
+  cudnn_benchmark: true # leave it as it is. if it's true, it will help find the best algorithm for the hardware
+  manual_seed: 0 # random seed
+  debug_mode: false # if true then plot weight and weight.grad values to debug
+  verbose: false # if verbose, log additional messages
+
+  # logs, checkpoints, results, json_file for config, zip code file
+  visualizer:
+    root_dir: ~
+    instances: ['html', 'tensorboard']
+    iter_freq: 10000
+    html:
+      name: html
+      display_winsize: 256
+    tensorboard:
+      name: tensorboard
+
+  evaluator: # Utility for eval
+    root_dir: ~
+    iter_freq: 20000
+    epoch_freq: 1
+    n_eval: 1 # 1 iter: 1 x batch_size
+    metric:
+      instances: []
+      params: ~
+
+  checkpointer:
+    root_dir: ~
+    iter_freq: 60000
+    epoch_freq: 1
+
+  logger:
+    root_dir: ~
+    iter_freq: 500
+
+  image_writer:
+    root_dir: ~
+    output_visual: true
+
+model:
+  file: modernization.multi_reference # filename of the model
+  class: DirectMRSFModel # class name of the model
+  params:
+    init_type: xavier
+    init_gain: 0.02
+
+    # Style Transfer Backbone
+    st_backbone:
+      encoder_path: resources/pretrained_model/stylization/paper/checkpoint/latest_netE.pth
+      decoder_path: resources/pretrained_model/stylization/paper/checkpoint/latest_netD.pth
+
+    netMR:
+      input_nc: 3
+      output_nc: 3
+      num_downs: 7
+      ngf: 64
+      use_dropout: false
+
+    netD:
+      input_nc: 3
+      ndf: 64
+      n_layers: 3
+
+    label_count: 184 # 183 when there is a filler
+
+  # Called by trainer
+  training:
+    input_key: content
+    multistage:
+      stage: 2 # 1 | 2
+      pretrained_path: resources/experiments/multi_reference_modernization_paper_retrain_stage1/checkpoint/checkpoint_latest.pt
+
+    continue:
+      is_continue: false
+      pretrained_step: ~
+      pretrained_path: ~
+      reset_model_internal_state:
+        is_reset: false
+        params: ~
+
+    start_epoch: 1
+    n_epochs: 10
+    n_epochs_decay: 0
+
+    lr_scheduler: ~
+
+    optimizer:
+      netS:
+        name: adam
+        params:
+          lr: !!float 1e-4
+          beta1: 0.5
+          beta2: 0.999
+
+      netMR:
+        name: adam
+        params:
+          lr: !!float 1e-4
+          beta1: 0.5
+          beta2: 0.999
+
+      netD:
+        name: adam
+        params:
+          lr: !!float 1e-4
+          beta1: 0.5
+          beta2: 0.999
+
+    loss:
+      stage_1:
+        img_single: 1
+        content_percep_single: 1
+        style_contextual_single: 1
+
+        eps: !!float 1e-5
+      stage_2:
+        img_merging_refinement: 2
+        percep_merging_refinement: 1
+        smoothness_merging_refinement: 3
+        adversarial: 0.2
+
+
+  # Called by evaluator
+  evaluation:
+    pretrained_step: latest
+    pretrained_path: ~
+    n_test: 10000000
+
+    multistage:
+      stage: 2
+      pretrained_path: ~
+
+
+datasets:
+  train: # dummy data, not used
+    name: COCOSelfAugmentation
+
+    dataloader:
+      file: local
+      class: SingleDataLoader
+      params:
+        use_sampler: false
+        use_shuffle: true
+        n_workers: 4
+        batch_size: 1
+        drop_last: true # for training, it's better to drop last
+        pin_memory: true
+
+    dataset:
+      file: modernization.multi_reference
+      class: COCOStuffMultiStyleV2Dataset
+      params:
+        root_dir: resources/dataset/Modernization/COCO_2017
+        annotation_dir: resources/dataset/Modernization/COCO_annotations2017/train2017
+        n_styles: 2
+
+        ignore_label: 182
+        dummy_label: 183
+        label_count: 183
+
+        color_jitter:
+          brightness: 0.2
+          contrast: 0.2
+          saturation: 0.4
+          hue: 0.4
+
+      transform:
+        instances: [] # The transformation is hardcoded
+        params: ~
+
+  eval:
+    name: COCOSelfAugmentation
+
+    dataloader:
+      file: local
+      class: SingleDataLoader
+      params:
+        use_sampler: false
+        use_shuffle: false # remove if you use sampler
+        n_workers: 4
+        batch_size: 1
+        drop_last: false
+        pin_memory: true
+
+    dataset:
+      file: modernization.multi_reference
+      class: COCOStuffMultiStyleV2Dataset
+      params:
+        root_dir: resources/dataset/Modernization/COCO_2017
+        annotation_dir: resources/dataset/Modernization/COCO_annotations2017/train2017
+        n_styles: 2
+
+        ignore_label: 182
+        dummy_label: 183
+        label_count: 183
+
+        color_jitter:
+          brightness: 0.2
+          contrast: 0.2
+          saturation: 0.4
+          hue: 0.4
+
+      transform:
+        instances: [ ] # The transformation is hardcoded
+        params: ~

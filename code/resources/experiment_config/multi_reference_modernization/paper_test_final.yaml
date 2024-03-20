@@ -1,0 +1,140 @@
+# v2_4: Grayscale lowresolution
+experiment:
+  name: multi_reference_modernization
+  root_dir: resources/experiments/multi_reference_modernization_paper # CHANGE HERE
+  add_timestamp: false
+
+engine:
+  file: local_engine
+  class: LocalMachineSingleGPU
+  phase: evaluation # phase of the experiment: training | evaluation
+  gpu_id: 0
+  # use cudnn benchmark when input size is constant; if you want reproducibility, set as false
+  cudnn_deterministic: false
+  cudnn_benchmark: true # leave it as it is. if it's true, it will help find the best algorithm for the hardware
+  manual_seed: 0 # random seed
+  debug_mode: false # if true then plot weight and weight.grad values to debug
+  verbose: false # if verbose, log additional messages
+
+  # logs, checkpoints, results, json_file for config, zip code file
+  visualizer:
+    root_dir: ~
+    instances: ['html', 'tensorboard']
+    iter_freq: 500
+    html:
+      name: html
+      display_winsize: 256
+    tensorboard:
+      name: tensorboard
+
+  evaluator: # Utility for eval
+    root_dir: ~
+    iter_freq: 5000
+    epoch_freq: 1
+    n_eval: 1 # 1 iter: 1 x batch_size
+    metric:
+      instances: []
+      params: ~
+
+  checkpointer:
+    root_dir: ~
+    iter_freq: 5000
+    epoch_freq: 1
+
+  logger:
+    root_dir: ~
+    iter_freq: 100
+
+  image_writer:
+    root_dir: ~
+    output_visual: true
+
+model:
+  file: modernization.multi_reference # filename of the model
+  class: DirectMRSFModel # class name of the model
+  params:
+    init_type: xavier
+    init_gain: 0.02
+
+    # Style Transfer Backbone
+    st_backbone:
+      encoder_path: resources/pretrained_model/stylization/paper/checkpoint/latest_netE.pth
+      decoder_path: resources/pretrained_model/stylization/paper/checkpoint/latest_netD.pth
+
+    netMR:
+      input_nc: 3
+      output_nc: 3
+      num_downs: 7
+      ngf: 64
+      use_dropout: false
+
+    netD:
+      input_nc: 3
+      ndf: 64
+      n_layers: 3
+
+    label_count: 184 # 183 when there is a filler
+
+  # Called by trainer
+  training: ~
+  # Called by evaluator
+  evaluation:
+    pretrained_step: latest
+    pretrained_path: ~
+    n_test: 10000000
+
+    multistage:
+      stage: 2 # CHANGE HERE 1|2
+      pretrained_path: resources/experiments/multi_reference_modernization_paper/checkpoint/checkpoint_latest.pt # CHANGE HERE
+
+
+datasets:
+  train: # dummy data, not used
+    name: ETRIMultiRef
+
+    dataloader:
+      file: local
+      class: SingleDataLoader
+      params:
+        use_sampler: false
+        use_shuffle: true
+        n_workers: 4
+        batch_size: 128
+        drop_last: true # for training, it's better to drop last
+        pin_memory: true
+
+    dataset:
+      file: modernization.multi_reference
+      class: ETRIMultiReferenceDataset
+      params:
+        root_dir: resources/dataset/modernization/sample # CHANGE HERE
+        data_mode: test
+        n_styles: 2
+
+      transform:
+        instances: [] # The transformation is hardcoded
+
+  eval:
+    name: ETRIMultiRef
+
+    dataloader:
+      file: local
+      class: SingleDataLoader
+      params:
+        use_sampler: false
+        use_shuffle: false # remove if you use sampler
+        n_workers: 4
+        batch_size: 1 # TODO: change after debug
+        drop_last: false
+        pin_memory: true
+
+    dataset:
+      file: modernization.multi_reference
+      class: ETRIMultiReferenceDataset
+      params:
+        root_dir: resources/dataset/modernization/sample
+        data_mode: test
+        n_styles: 2
+      transform:
+        instances: [] # The transformation is hardcoded
+        params: ~
