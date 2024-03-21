@@ -161,8 +161,8 @@ datasets:
       file: modernization.multi_reference
       class: COCOStuffMultiStyleV2Dataset
       params:
-        root_dir: resources/dataset/Modernization/COCO_2017
-        annotation_dir: resources/dataset/Modernization/COCO_annotations2017/train2017
+        root_dir: resources/dataset/modernization/COCO/train2017
+        annotation_dir: resources/dataset/modernization/COCO/annotations2017/train2017
         n_styles: 2
 
         ignore_label: 182
@@ -197,8 +197,8 @@ datasets:
       file: modernization.multi_reference
       class: COCOStuffMultiStyleV2Dataset
       params:
-        root_dir: resources/dataset/Modernization/COCO_2017
-        annotation_dir: resources/dataset/Modernization/COCO_annotations2017/train2017
+        root_dir: resources/dataset/modernization/COCO/train2017
+        annotation_dir: resources/dataset/modernization/COCO/annotations2017/train2017
         n_styles: 2
 
         ignore_label: 182
