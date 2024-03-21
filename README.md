@@ -20,8 +20,8 @@ Please run all of the following instruction inside `code` directory.
 ## Installation
 
 ### Clone Only The Code Directory
-This repository contains both website that is big (~1.5 GB) due to the demo.
-One can just clone the `code` directory.
+This repository contains website that is big (~1.5 GB) due to the demo.
+One can just clone the `code` directory to clone only the code part.
 
 ### Environment Setup
 ```
